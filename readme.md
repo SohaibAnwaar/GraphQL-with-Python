@@ -8,7 +8,7 @@ Need to make a  python environment to install all of the required packages to ru
 * Orator
 * psycopg2
 
-```
+```bash
 # Making conda environment
 conda create -n graphql python=3.9
 
@@ -16,11 +16,7 @@ conda create -n graphql python=3.9
 conda activate graphql
 
 # installing packages seperatly
-pip install graphene
-pip install fastapi
-pip install "uvicorn[standard]"
-pip install 'strawberry-graphql[fastapi]'
-pip install orator
+pip install -r requirements.txt
 pip install psycopg2-binary
 ```
 Strawberry  is a new GraphQL library for Python 3, inspired by dataclasses.
@@ -48,7 +44,7 @@ GraphQL, meanwhile, is a query language for retrieving data from an API. Instead
 
 In GraphQL, you would structure a query like so to obtain a user's profile, posts, and comments:
 
-```python
+```json
 query {
   User(userId: 2){
     name
@@ -65,3 +61,115 @@ query {
 }
 ```
 Voila! You get all the data in just one request with no overfetching since we specified exactly what we want.
+
+
+## Setting Database
+Make a ```.env``` file with in the project directory.
+```
+# ENV FILE
+DATABASE_HOSTNAME='localhost'
+DATABASE_PORT='5432'
+DATABASE_PASSWORD='postgres'
+DATABASE_NAME='graphql'
+DATABASE_USERNAME='postgres'
+DATABASE_DRIVER='postgres'
+```
+
+### Postgres Structure
+![Postgres Structure](doc_attachments/images/postgresStructure.png)
+
+
+```bash
+# Run on terminal (After activating environment)
+# Making a migration file
+orator make:model MyCar -m
+
+>>> Model MyCar successfully created.
+>>> Created migration: 2022_05_31_110648_create_my_cars_table.py
+```
+a new migration file will be created in your project folder ```migrations/2022_05_31_110648_create_my_cars_table.py``` with code
+
+```python
+from orator.migrations import Migration
+
+
+class CreateMyCarsTable(Migration):
+
+    def up(self):
+        """
+        Run the migrations.
+        """
+        with self.schema.create('my_cars') as table:
+            table.increments('id')
+            table.timestamps()
+            
+            
+
+    def down(self):
+        """
+        Revert the migrations.
+        """
+        self.schema.drop('my_cars')
+
+```
+now I also need a name field in the table so I will add ```table.string('name')``` in up function
+
+**File After Changing**
+
+```python
+from orator.migrations import Migration
+
+
+class CreateMyCarsTable(Migration):
+
+    def up(self):
+        """
+        Run the migrations.
+        """
+        with self.schema.create('my_cars') as table:
+            table.increments('id')
+            table.string('name')
+            table.timestamps()
+            
+            
+
+    def down(self):
+        """
+        Revert the migrations.
+        """
+        self.schema.drop('my_cars')
+
+```
+
+Now Lets run migration
+
+```bash
+orator migrate -c db.py
+
+
+>>> Are you sure you want to proceed with the migration?  (yes/no) [no] yes
+>>> Migration table created successfully
+>>> [OK] Migrated 2022_05_31_110648_create_my_cars_table
+```
+Now if you view your db now their is another Table name ```my_cars```
+
+After running the code:
+```bash
+# run this on terminal to start application
+uvicorn main:app --reload
+```
+
+open this url in browser ```http://localhost:8000/graphql```
+
+```json
+mutation createMyCar{
+  createMyCar(
+    carDetails: {
+      id: 1,
+      name: "bmw"
+    }
+  ) {
+    id
+  }
+}
+```

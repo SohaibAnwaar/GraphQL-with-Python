@@ -1,32 +1,31 @@
-import typing
-import strawberry
+import graphene
+from serializers import (
+    MyCarGrapheneInputModel,
+    MyCarGrapheneModel
+)
+from models.my_car import MyCar
 
 
-books_list = []
-def get_books():
-    return [i for i in books_list]
+class Query(graphene.ObjectType):
+    say_hello = graphene.String(name=graphene.String())
 
+    @staticmethod
+    def resolve_say_hello(parent, info, name):
+        return f'Hello {name}'
 
-@strawberry.type
-class Book:
-    title: str
-    author: str
+class CreateMyCar(graphene.Mutation):
+    class Arguments:
+        car_details=MyCarGrapheneInputModel()
 
-@strawberry.type
-class Query:
-    books: typing.List[Book]
+    Output=MyCarGrapheneModel
 
+    @staticmethod
+    def mutate(parent, info, car_details):
+        my_car = MyCar()
+        my_car.name = car_details.name
+        my_car.save()
 
-@strawberry.type
-class Query:
-    books: typing.List[Book] = strawberry.field(resolver=get_books)
+        return my_car
 
-
-
-@strawberry.type
-class Mutation:
-    @strawberry.mutation
-    def add_book(self, title: str, author: str) -> Book:
-        print(f'Adding {title} by {author}')
-        books_list.append(Book(title=title, author=author))
-        return Book(title=title, author=author)
+class Mutation(graphene.ObjectType):
+    create_my_car = CreateMyCar.Field()

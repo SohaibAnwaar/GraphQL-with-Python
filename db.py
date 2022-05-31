@@ -1,14 +1,21 @@
+import sys, os
+print(os.getcwd())
+sys.path.append(os.getcwd())
+
 from orator import DatabaseManager, Schema, Model
+
+from config import settings
+
 
 DATABASES = {
     "postgres": {
-        "driver": "postgres",
-        "host": "localhost",
-        "database": "db_name",
-        "user": "db_user",
-        "password": "db_password",
+        "driver": settings.database_driver,
+        "host": settings.database_hostname,
+        "database": settings.database_name,
+        "user": settings.database_username,
+        "password": settings.database_password,
         "prefix": "",
-        "port": 5432
+        "port": settings.database_port
     }
 }
 
