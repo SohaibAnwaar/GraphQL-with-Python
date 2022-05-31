@@ -8,10 +8,15 @@ from models.my_car import MyCar
 
 class Query(graphene.ObjectType):
     say_hello = graphene.String(name=graphene.String())
+    list_cars = graphene.List(MyCarGrapheneModel)
 
     @staticmethod
     def resolve_say_hello(parent, info, name):
         return f'Hello {name}'
+    
+    @staticmethod
+    def resolve_list_cars(parent, info):
+        return MyCar.all()
 
 class CreateMyCar(graphene.Mutation):
     class Arguments:

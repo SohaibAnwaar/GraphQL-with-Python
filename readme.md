@@ -173,3 +173,36 @@ mutation createMyCar{
   }
 }
 ```
+
+Query your db from pg_admin or admin
+
+![Query Results](doc_attachments/images/qureyResult.png)
+
+## Now lets fetch the cars
+
+Go to url ```http://localhost:8000/graphql```
+```json
+query ListCars{
+  listCars {
+    id
+  	name
+  }
+}
+```
+**Results:**
+```json
+{
+  "data": {
+    "listCars": [
+      {
+        "id": 1,
+        "name": "bmw"
+      },
+      {
+        "id": 2,
+        "name": "audi"
+      }
+    ]
+  }
+}
+```
