@@ -10,7 +10,7 @@ Need to make a  python environment to install all of the required packages to ru
 
 ```bash
 # Making conda environment
-conda create -n graphql python=3.9
+conda create -n graphql python=3.6
 
 # Activating environment
 conda activate graphql
@@ -76,7 +76,7 @@ DATABASE_DRIVER='postgres'
 ```
 
 ### Postgres Structure
-![Postgres Structure](doc_attachments/images/postgresStructure.png)
+![Postgres Structure](attachments/images/postgresStructure.png)
 
 
 ```bash
@@ -170,13 +170,14 @@ mutation createMyCar{
     }
   ) {
     id
+    name
   }
 }
 ```
 
 Query your db from pg_admin or admin
 
-![Query Results](doc_attachments/images/qureyResult.png)
+![Query Results](attachments/images/qureyResult.png)
 
 ## Now lets fetch the cars
 
@@ -206,3 +207,7 @@ query ListCars{
   }
 }
 ```
+
+
+## Graphql Results
+![Results](./attachments/images/graphql_results.png)
