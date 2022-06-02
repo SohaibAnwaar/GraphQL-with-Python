@@ -8,6 +8,25 @@ Need to make a  python environment to install all of the required packages to ru
 * Orator
 * psycopg2
 
+## Directory Structure
+```
+.
+├── config.py -> File to read environment variables from .env file
+├── db.py -> Db connection
+├── main.py -> Fast APIS
+├── migrations -> Db Migrations
+│   ├── 2022_05_31_110648_create_my_cars_table.py
+│   └── __init__.py
+├── models 
+│   ├── __init__.py
+│   └── my_car.py -> My Schema of Graphql
+├── readme.md 
+├── requirements.txt
+├── schema.py -> Queries of GraphQL (Mutation, Query)
+└── serializers.py -> Serializers of Model
+```
+## Environment Settings
+Setting up environment
 ```bash
 # Making conda environment
 conda create -n graphql python=3.6
